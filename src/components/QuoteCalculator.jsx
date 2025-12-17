@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { NumberInput, MaterialOption, CostRow } from './UIComponents';
+import { supabase } from '../lib/supabase';
+import { Save } from 'lucide-react';
 
 export default function QuoteCalculator() {
     // State: Material Costs
@@ -247,9 +249,36 @@ export default function QuoteCalculator() {
                             <div className="text-5xl font-bold mb-4 tracking-tight">
                                 ${calculations.priceUnit.toFixed(2)}
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-emerald-400 bg-emerald-400/10 w-fit px-3 py-1 rounded-full border border-emerald-400/20">
-                                <TrendingUp size={14} />
-                                <span>Ganancia: ${calculations.profitUnit.toFixed(2)} / unidad</span>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2 text-sm text-emerald-400 bg-emerald-400/10 w-fit px-3 py-1 rounded-full border border-emerald-400/20">
+                                    <TrendingUp size={14} />
+                                    <span>Ganancia: ${calculations.profitUnit.toFixed(2)} / unidad</span>
+                                </div>
+                                <button
+                                    onClick={async () => {
+                                        const { error } = await supabase.from('quotes').insert({
+                                            length_cm: dimensions.length,
+                                            width_cm: dimensions.width,
+                                            height_cm: dimensions.height,
+                                            material_type: selectedMaterial,
+                                            volume: volume,
+                                            material_unit_cost: selectedMaterial === 'A' ? materialCosts.typeA : materialCosts.typeB,
+                                            fab_cost: operationalCosts.fabrication,
+                                            mkt_cost: operationalCosts.marketing,
+                                            margin_percent: margin,
+                                            final_unit_price: calculations.priceUnit,
+                                            unif_profit: calculations.profitUnit,
+                                            total_project_profit: calculations.totalProjectProfit
+                                        });
+
+                                        if (error) alert('Error al guardar: ' + error.message);
+                                        else alert('Cotización guardada en Historial.');
+                                    }}
+                                    className="p-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white transition-colors shadow-lg shadow-indigo-900/50"
+                                    title="Guardar en Base de Datos"
+                                >
+                                    <Save size={20} />
+                                </button>
                             </div>
                         </div>
                     </div>

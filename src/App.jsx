@@ -8,6 +8,8 @@ import {
 import { cn } from './lib/utils';
 import QuoteCalculator from './components/QuoteCalculator';
 import Optimizer from './components/Optimizer';
+import AIAnalyst from './components/AIAnalyst';
+import { Brain } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState('quote'); // 'quote' | 'optimizer'
@@ -55,11 +57,19 @@ function App() {
               icon={<LayoutGrid size={18} />}
               label="Optimizador de Cortes IA"
             />
+            <TabButton
+              active={activeTab === 'ai'}
+              onClick={() => setActiveTab('ai')}
+              icon={<Brain size={18} />}
+              label="Analista IA"
+            />
           </div>
         </div>
 
         {/* Content Area */}
-        {activeTab === 'quote' ? <QuoteCalculator /> : <Optimizer />}
+        {activeTab === 'quote' && <QuoteCalculator />}
+        {activeTab === 'optimizer' && <Optimizer />}
+        {activeTab === 'ai' && <AIAnalyst />}
 
       </main>
     </div>
