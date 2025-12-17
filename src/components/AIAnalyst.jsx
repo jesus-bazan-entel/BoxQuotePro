@@ -12,20 +12,16 @@ import { supabase } from '../lib/supabase';
 import { analyzeQuotesWithGemini } from '../lib/aiSelect';
 
 export default function AIAnalyst() {
-    const [apiKey, setApiKey] = useState(localStorage.getItem('GEMINI_API_KEY') || '');
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(false);
     const [analyzing, setAnalyzing] = useState(false);
     const [analysisResult, setAnalysisResult] = useState(null);
 
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
     useEffect(() => {
         fetchHistory();
     }, []);
-
-    const saveKey = (val) => {
-        setApiKey(val);
-        localStorage.setItem('GEMINI_API_KEY', val);
-    };
 
     const fetchHistory = async () => {
         setLoading(true);
@@ -62,27 +58,7 @@ export default function AIAnalyst() {
             {/* Configuration & History Sidebar */}
             <div className="lg:col-span-4 space-y-6">
 
-                {/* API Key Config */}
-                <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <div className="flex items-center gap-2 mb-4 text-indigo-900">
-                        <Key className="w-5 h-5" />
-                        <h2 className="text-lg font-bold">Configuración IA</h2>
-                    </div>
 
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase">Google Gemini API Key</label>
-                        <input
-                            type="password"
-                            value={apiKey}
-                            onChange={(e) => saveKey(e.target.value)}
-                            placeholder="Pegar tu API Key aquí..."
-                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                        />
-                        <p className="text-[10px] text-slate-400">
-                            Tu llave se guarda localmente en el navegador.
-                        </p>
-                    </div>
-                </section>
 
                 {/* Recent Quotes List */}
                 <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex-1 flex flex-col h-[500px]">
